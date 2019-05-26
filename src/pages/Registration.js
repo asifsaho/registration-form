@@ -12,7 +12,7 @@ import {
     Grid
 } from '@material-ui/core';
 import moment from 'moment';
-import InputTextField from '../components/InputTextField';
+import InputTextField from '../components/InputTextField/InputTextField';
 import PassportIssueCountry from '../components/PassportIssueCountry/PassportIssueCountry';
 import Nationality from '../components/Nationality/Nationality';
 import validator from '../utils/validator';
