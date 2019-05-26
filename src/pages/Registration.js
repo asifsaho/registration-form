@@ -16,7 +16,7 @@ import {
 import moment from 'moment';
 import PassportIssueCountry from '../components/PassportIssueCountry/PassportIssueCountry';
 import Nationality from '../components/Nationality/Nationality';
-import DatePicker from '../components/DatePicker';
+import validator from '../utils/validator';
 import ShowRegistrationInfo from '../components/ShowRegistrationInfo';
 
 class Registration extends Component {
@@ -30,7 +30,7 @@ class Registration extends Component {
             passportIssueCountry: {value: 'BD', label: 'Bangladesh'},
             gender: 'male',
             nationality: {value: 'Bangladeshi', label: 'Bangladeshi'},
-            dateOfBirth: '',
+            dateOfBirth: '1992.08.09',
             passportValidity: '',
             formErrors: {
                 firstName: false,
@@ -60,7 +60,7 @@ class Registration extends Component {
             case "firstName" :
                 this.setState({
                     formErrors: Object.assign(this.state.formErrors, {
-                        [name]: (!value.length || value.length > 8)
+                        [name]: validator.firstName(value)
                     })
                 });
 
@@ -69,40 +69,51 @@ class Registration extends Component {
             case "lastName":
                 this.setState({
                     formErrors: Object.assign(this.state.formErrors, {
-                        [name]: (!value.length || value.length > 8)
+                        [name]: validator.lastName(value)
                     })
                 });
 
                 break;
 
             case "passportNumber":
-                const noSpecialCharRegex = RegExp('[^A-Za-z0-9]', 'g');
-                const containNumberRegex = RegExp('[0-9]', 'g');
-                const containAlphabetRegex = RegExp('[A-Za-z]', 'g');
-
                 this.setState({
                     formErrors: Object.assign(this.state.formErrors, {
-                        [name]: (!value.length || !containNumberRegex.test(value) || !containAlphabetRegex.test(value) || noSpecialCharRegex.test(value) || value.length !== 9)
+                        [name]: validator.passportNumber(value)
                     })
                 });
 
                 break;
 
             case "dateOfBirth":
-                const formatRegex = RegExp('^[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2}$', 'g');
-
                 this.setState({
                     formErrors: Object.assign(this.state.formErrors, {
-                        [name]: (!value.length || !formatRegex.test(value) || !moment(new Date(value)).isValid() || !(moment(new Date(value)).diff('1919-01-01', 'days') > 0) || !!(moment(new Date(value)).diff(new Date(), 'days') > 0))
+                        [name]: validator.dateOfBirth(value)
                     })
                 });
 
-                // console.log({ // True means pass
+                // console.log({ // All True means pass
                 //     'Format check': formatRegex.test(value),
                 //     'length': !!value.length,
                 //     'Is Valid': moment(new Date(value)).isValid(),
                 //     'Not Older than 1919': (moment(new Date(value)).diff('1919-01-01', 'days') > 0),
                 //     'Date Not after today': !(moment(new Date(value)).diff(new Date(), 'days') > 0)
+                // });
+
+                break;
+
+            case "passportValidity":
+                this.setState({
+                    formErrors: Object.assign(this.state.formErrors, {
+                        [name]: validator.passportValidity(value, this.state.dateOfBirth)
+                    })
+                });
+
+                // console.log({ // All True means pass
+                //     'Date Of Birth': this.state.dateOfBirth,
+                //     'Format check': PVformatRegex.test(value),
+                //     'length': !!value.length,
+                //     'Is Valid': moment(new Date(value)).isValid(),
+                //     'Not Older than Date Of Birth': (moment(new Date(value)).diff(moment(new Date(this.state.dateOfBirth)), 'days') > 0)
                 // });
 
                 break;
@@ -131,8 +142,8 @@ class Registration extends Component {
             !state.passportIssueCountry.value.length ||
             !state.gender.length ||
             !state.nationality.value.length ||
-            !+state.dateOfBirth ||
-            !+state.passportValidity ||
+            !state.dateOfBirth.length ||
+            !state.passportValidity.length ||
 
             // Check Errors
             state.formErrors.firstName ||
@@ -251,7 +262,8 @@ class Registration extends Component {
                                            onChange={this.handleChange}/>
 
                                 {formErrors.dateOfBirth && <FormHelperText>
-                                    The date of birth should be in YYYY-MM-DD format and should not be older than 1919 and after today
+                                    The date of birth should be in YYYY-MM-DD format and should not be older than 1919
+                                    and after today
                                 </FormHelperText>}
                             </FormControl>
                         </Grid>
@@ -267,7 +279,8 @@ class Registration extends Component {
                                            onChange={this.handleChange}/>
 
                                 {formErrors.passportValidity && <FormHelperText>
-                                    The expiry date should be in YYYY-MM-DD format and should not be before date of birth
+                                    The expiry date should be in YYYY-MM-DD format and should not be before date of
+                                    birth
                                 </FormHelperText>}
                                 {/*Validation against upper and lower limits and date of birth (cannot expire before birthday*/}
                             </FormControl>
