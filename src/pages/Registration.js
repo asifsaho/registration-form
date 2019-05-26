@@ -102,6 +102,15 @@ class Registration extends Component {
                     })
                 });
 
+
+                if(!validator.passportValidity(value, this.state.dateOfBirth)){
+                    this.setState({
+                        formErrors: Object.assign(this.state.formErrors, {
+                            passportValidity: false
+                        })
+                    });
+                }
+
                 break;
 
             case "passportValidity":
@@ -247,7 +256,7 @@ class Registration extends Component {
                             <InputTextField value={passportValidity}
                                             formErrors={formErrors}
                                             name="passportValidity"
-                                            label="Date Of Birth *"
+                                            label="Passport Validity *"
                                             placeholder="YYYY.MM.DD"
                                             errorMsg="The expiry date should be in YYYY-MM-DD format and should not be before date of birth"
                                             handleChange={this.handleChange}/>
