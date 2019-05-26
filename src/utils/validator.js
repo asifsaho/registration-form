@@ -1,6 +1,6 @@
 import moment from "moment";
 
-const nameValidationRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\d]/;
+const nameValidationRegex = /[^A-Za-z]/;
 
 export default {
     firstName: (value) => (!value.length || value.length > 8 || nameValidationRegex.test(value)),
