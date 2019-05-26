@@ -1,66 +1,134 @@
 import React, {Component} from 'react';
-import {FormControl,
+import {
+    FormControl,
     FormLabel,
     TextField,
     RadioGroup,
     FormControlLabel,
     Radio,
-    Select,
-    MenuItem,
     withStyles,
     Typography,
     Container,
     Button,
     FormHelperText,
-    Input,
     Grid
 } from '@material-ui/core';
-
+import moment from 'moment';
+import PassportIssueCountry from '../components/PassportIssueCountry/PassportIssueCountry';
+import Nationality from '../components/Nationality/Nationality';
 import DatePicker from '../components/DatePicker';
+import ShowRegistrationInfo from '../components/ShowRegistrationInfo';
 
 class Registration extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            country: '',
-            firstName: '',
-            lastName: '',
-            passportNumber: '',
-            passportIssueCountry: '',
-            gender: '',
-            nationality: '',
+            firstName: 'Asif',
+            lastName: 'Nawaz',
+            passportNumber: 'BQ0622850',
+            passportIssueCountry: {value: 'BD', label: 'Bangladesh'},
+            gender: 'male',
+            nationality: {value: 'Bangladeshi', label: 'Bangladeshi'},
             dateOfBirth: '',
-            passportValidity: ''
+            passportValidity: '',
+            formErrors: {
+                firstName: false,
+                lastName: false,
+                passportNumber: false,
+                passportIssueCountry: false,
+                gender: false,
+                nationality: false
+            },
+            showRegistrationInfo: false
         }
     }
 
 
     handleChange = (event) => {
-        //console.log({'Name': event.target.value, 'Value': event.target.value});
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-    };
-
-    handleDatePickerChange = (name, value) => {
-        //console.log({'Name': name, 'Value:': value.format()});
+        const {name, value} = event.target;
+        console.log({'Name': event.target.name, 'Value': event.target.value});
 
         this.setState({
-            [name]: value.format()
+            [name]: value
         });
-    };
 
+
+        switch (name) {
+            case "firstName" :
+                this.setState({
+                    formErrors: Object.assign(this.state.formErrors, {
+                        [name]: (!value.length || value.length > 8)
+                    })
+                });
+
+                break;
+
+            case "lastName":
+                this.setState({
+                    formErrors: Object.assign(this.state.formErrors, {
+                        [name]: (!value.length || value.length > 8)
+                    })
+                });
+
+                break;
+
+            case "passportNumber":
+                const noSpecialCharRegex = RegExp('[^A-Za-z0-9]', 'g');
+                const containNumberRegex = RegExp('[0-9]', 'g');
+                const containAlphabetRegex = RegExp('[A-Za-z]', 'g');
+
+                this.setState({
+                    formErrors: Object.assign(this.state.formErrors, {
+                        [name]: (!value.length || !containNumberRegex.test(value) || !containAlphabetRegex.test(value) || noSpecialCharRegex.test(value) || value.length !== 9)
+                    })
+                });
+
+                break;
+
+            default:
+                return;
+        }
+    };
 
     performRegistration = (event) => {
         event.preventDefault();
-        console.log(this.state)
+
+        this.setState({
+            showRegistrationInfo: true
+        })
+    };
+
+    disableSubmit = () => {
+        const {state} = this;
+
+        return (
+            // Check values
+            !state.firstName.length ||
+            !state.lastName.length ||
+            !state.passportNumber.length ||
+            !state.passportIssueCountry.value.length ||
+            !state.gender.length ||
+            !state.nationality.value.length ||
+            !+state.dateOfBirth ||
+            !+state.passportValidity ||
+
+            // Check Errors
+            state.formErrors.firstName ||
+            state.formErrors.lastName ||
+            state.formErrors.passportNumber ||
+            state.formErrors.passportIssueCountry ||
+            state.formErrors.gender ||
+            state.formErrors.nationality
+        )
     };
 
     render() {
         const {classes} = this.props;
+        const {formErrors} = this.state;
 
         return (
+            <>
             <form onSubmit={this.performRegistration}>
                 <Container maxWidth="md">
                     <Typography variant="h4">Please fill up the registration form</Typography>
@@ -77,9 +145,9 @@ class Registration extends Component {
                                         shrink: true,
                                     }}
                                 />
-                                <FormHelperText id="component-error-text">
-                                    error
-                                </FormHelperText>
+                                {formErrors.firstName && <FormHelperText>
+                                    First Name shouldn't be more than 8 character long.
+                                </FormHelperText>}
                             </FormControl>
                             {/*Free text, validation against most common mistakes regarding a person’s name*/}
                         </Grid>
@@ -95,13 +163,15 @@ class Registration extends Component {
                                         shrink: true,
                                     }}
                                 />
-                                <FormHelperText id="component-error-text">Error</FormHelperText>
+                                {formErrors.lastName && <FormHelperText error>
+                                    Last Name shouldn't be more than 8 character long.
+                                </FormHelperText>}
                             </FormControl>
                             {/*Free text, validation against most common mistakes regarding a person’s name*/}
                         </Grid>
 
                         <Grid item md={4}>
-                            <FormControl className={classes.field}>
+                            <FormControl className={classes.field} error>
                                 <TextField
                                     label="Passport Number *"
                                     value={this.state.passportNumber}
@@ -111,26 +181,19 @@ class Registration extends Component {
                                         shrink: true,
                                     }}
                                 />
-                                <FormHelperText id="component-error-text">Error</FormHelperText>
+                                {formErrors.passportNumber && <FormHelperText>
+                                    The passport number should contain both letters and numbers without any special
+                                    character and should not be great than 9 character
+                                </FormHelperText>}
                                 {/*Free text, validation against format*/}
                             </FormControl>
                         </Grid>
 
                         <Grid item md={4}>
-                            <Select
-                                value={this.state.passportIssueCountry}
-                                onChange={this.handleChange}
-                                input={<Input name="passportIssueCountry"/>}
-                                displayEmpty
-                                name="passportIssueCountry"
-                                className={classes.selectEmpty}
-                            >
-                                <MenuItem value="">
-                                    <em>Issuing Country *</em>
-                                </MenuItem>
-                                <MenuItem value="Bangladesh">Bangladesh</MenuItem>
-                                <MenuItem value="Germany">Germany</MenuItem>
-                            </Select>
+                            <FormLabel component="legend">Passport Issuing Country *</FormLabel>
+                            <PassportIssueCountry value={this.state.passportIssueCountry}
+                                                  name="passportIssueCountry"
+                                                  handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
@@ -141,50 +204,53 @@ class Registration extends Component {
                                     name="gender"
                                     value={this.state.gender}
                                     onChange={this.handleChange}>
-                                    <FormControlLabel value="F" control={<Radio />} label="F" />
-                                    <FormControlLabel value="M" control={<Radio />} label="M" />
-                                    <FormControlLabel value="D" control={<Radio />} label="D" />
+                                    <FormControlLabel value="female" control={<Radio/>} label="Female"/>
+                                    <FormControlLabel value="male" control={<Radio/>} label="Male"/>
+                                    <FormControlLabel value="Others" control={<Radio/>} label="Other"/>
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
 
                         <Grid item md={4}>
-                            <Select
-                                value={this.state.nationality}
-                                onChange={this.handleChange}
-                                input={<Input name="nationality"/>}
-                                displayEmpty
-                                name="nationality"
-                            >
-                                <MenuItem value="">
-                                    <em>Nationality *</em>
-                                </MenuItem>
-                                <MenuItem value="none"><em>Select one</em></MenuItem>
-                                <MenuItem value="Bangladeshi">Bangladesh</MenuItem>
-                                <MenuItem value="German">Germany</MenuItem>
-                            </Select>
+                            <FormLabel component="legend">Nationality *</FormLabel>
+                            <Nationality value={this.state.nationality}
+                                         name="nationality"
+                                         handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
                             <FormLabel component="legend">Date Of Birth *</FormLabel>
-                            <DatePicker name="dateOfBirth" handleDatePickerChange={this.handleDatePickerChange}/>
+                            <DatePicker className={classes.field} label="Date Of Birth *" name="dateOfBirth"
+                                        handleChange={this.handleChange}/>
                             {/*Validation against upper and lower limits*/}
                         </Grid>
 
                         <Grid item md={4}>
                             <FormLabel component="legend">Their passport expiration date *</FormLabel>
-                            <DatePicker name="passportValidity" handleDatePickerChange={this.handleDatePickerChange}/>
+                            <DatePicker name="passportValidity" handleChange={this.handleChange}/>
                             {/*Validation against upper and lower limits and date of birth (cannot expire before birth)*/}
                         </Grid>
 
                         <Grid item md={12}>
-                            <Button type="submit" variant="contained" color="primary">
+                            <Button type="submit" disabled={this.disableSubmit()} variant="contained" color="primary">
                                 Registration
                             </Button>
                         </Grid>
                     </Grid>
                 </Container>
             </form>
+
+            {this.state.showRegistrationInfo && <ShowRegistrationInfo data={[
+                {label: 'First Name', value: this.state.firstName},
+                {label: 'Last Name', value: this.state.lastName},
+                {label: 'Passport Number', value: this.state.passportNumber},
+                {label: 'Passport Issue Country', value: this.state.passportIssueCountry.label},
+                {label: 'Gender', value: this.state.gender},
+                {label: 'Nationality', value: this.state.nationality.label},
+                {label: 'Date Of Birth', value: moment(this.state.dateOfBirth).format('DD.MM.YYYY')},
+                {label: 'Passport Validity', value: moment(this.state.passportValidity).format('DD.MM.YYYY')}
+            ]}/>}
+            </>
         )
     }
 }

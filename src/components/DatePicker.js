@@ -27,6 +27,7 @@ class DatePickerWrap extends React.Component {
     render() {
         return (
             <DatePicker
+                dateFormat="d/MM/YYYY"
                 className={this.props.classes.datePicker}
                 selected={this.state.date}
                 onChange={this.handleChange}
