@@ -60,7 +60,7 @@ class Registration extends Component {
 
     handleChange = (event) => {
         const {name, value} = event.target;
-        console.log({'Name': event.target.name, 'Value': event.target.value});
+        // console.log({'Name': event.target.name, 'Value': event.target.value});
 
         this.setState({
             [name]: value
@@ -102,14 +102,6 @@ class Registration extends Component {
                     })
                 });
 
-                // console.log({ // All True means pass
-                //     'Format check': formatRegex.test(value),
-                //     'length': !!value.length,
-                //     'Is Valid': moment(new Date(value)).isValid(),
-                //     'Not Older than 1919': (moment(new Date(value)).diff('1919-01-01', 'days') > 0),
-                //     'Date Not after today': !(moment(new Date(value)).diff(new Date(), 'days') > 0)
-                // });
-
                 break;
 
             case "passportValidity":
@@ -118,14 +110,6 @@ class Registration extends Component {
                         [name]: validator.passportValidity(value, this.state.dateOfBirth)
                     })
                 });
-
-                // console.log({ // All True means pass
-                //     'Date Of Birth': this.state.dateOfBirth,
-                //     'Format check': PVformatRegex.test(value),
-                //     'length': !!value.length,
-                //     'Is Valid': moment(new Date(value)).isValid(),
-                //     'Not Older than Date Of Birth': (moment(new Date(value)).diff(moment(new Date(this.state.dateOfBirth)), 'days') > 0)
-                // });
 
                 break;
 
@@ -188,7 +172,7 @@ class Registration extends Component {
             <form onSubmit={this.performRegistration}>
                 <Container maxWidth="md">
                     <Typography variant="h4">Please fill up the registration form</Typography>
-                    <Grid container spacing={4}>
+                    <Grid container className={classes.marginTop50} spacing={4}>
                         <Grid item md={4}>
                             <InputTextField value={firstName}
                                             formErrors={formErrors}
@@ -303,6 +287,10 @@ class Registration extends Component {
 }
 
 const styles = {
+    marginTop50: {
+        marginTop: 50
+    },
+
     container: {
         maxWidth: 1200,
         margin: 'auto'
