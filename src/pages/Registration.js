@@ -102,11 +102,10 @@ class Registration extends Component {
                     })
                 });
 
-
-                if(!validator.passportValidity(value, this.state.dateOfBirth)){
+                if(this.state.passportValidity){
                     this.setState({
                         formErrors: Object.assign(this.state.formErrors, {
-                            passportValidity: false
+                            passportValidity: validator.passportValidity(this.state.passportValidity, value)
                         })
                     });
                 }
