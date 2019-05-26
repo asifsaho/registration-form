@@ -23,13 +23,13 @@ class Registration extends Component {
         super(props);
 
         this.state = {
-            firstName: 'Asif',
-            lastName: 'Nawaz',
-            passportNumber: 'BQ0622850',
-            passportIssueCountry: {value: 'BD', label: 'Bangladesh'},
-            gender: 'male',
-            nationality: {value: 'Bangladeshi', label: 'Bangladeshi'},
-            dateOfBirth: '1992.08.09',
+            firstName: '',
+            lastName: '',
+            passportNumber: '',
+            passportIssueCountry: {value: '', label: ''},
+            gender: '',
+            nationality: {value: '', label: ''},
+            dateOfBirth: '',
             passportValidity: '',
             formErrors: {
                 firstName: false,
