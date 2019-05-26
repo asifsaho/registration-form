@@ -1,9 +1,11 @@
 import moment from "moment";
 
-export default {
-    firstName: (value) => (!value.length || value.length > 8),
+const nameValidationRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\d]/;
 
-    lastName: (value) => (!value.length || value.length > 8),
+export default {
+    firstName: (value) => (!value.length || value.length > 8 || nameValidationRegex.test(value)),
+
+    lastName: (value) => (!value.length || value.length > 8 || nameValidationRegex.test(value)),
 
     passportNumber: (value) => {
         const noSpecialCharRegex = RegExp('[^A-Za-z0-9]', 'g');
