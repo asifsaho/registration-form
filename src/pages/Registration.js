@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
     FormControl,
     FormLabel,
-    TextField,
     RadioGroup,
     FormControlLabel,
     Radio,
@@ -10,10 +9,10 @@ import {
     Typography,
     Container,
     Button,
-    FormHelperText,
     Grid
 } from '@material-ui/core';
 import moment from 'moment';
+import InputTextField from '../components/InputTextField';
 import PassportIssueCountry from '../components/PassportIssueCountry/PassportIssueCountry';
 import Nationality from '../components/Nationality/Nationality';
 import validator from '../utils/validator';
@@ -42,9 +41,21 @@ class Registration extends Component {
                 passportValidity: false,
                 nationality: false
             },
-            showRegistrationInfo: false
+            showRegistrationInfo: false,
         }
     }
+
+    showRegistrationInfoModal = () => {
+        this.setState({
+            showRegistrationInfo: true,
+        });
+    };
+
+    hideRegistrationInfoModal = () => {
+        this.setState({
+            showRegistrationInfo: false
+        });
+    };
 
 
     handleChange = (event) => {
@@ -159,7 +170,18 @@ class Registration extends Component {
 
     render() {
         const {classes} = this.props;
-        const {formErrors} = this.state;
+
+        const {
+            formErrors,
+            firstName,
+            lastName,
+            passportNumber,
+            passportIssueCountry,
+            gender,
+            nationality,
+            dateOfBirth,
+            passportValidity
+        } = this.state;
 
         return (
             <>
@@ -168,64 +190,38 @@ class Registration extends Component {
                     <Typography variant="h4">Please fill up the registration form</Typography>
                     <Grid container spacing={4}>
                         <Grid item md={4}>
-                            <FormControl className={classes.field} error>
-                                <TextField
-                                    label="First Name *"
-                                    value={this.state.firstName}
-                                    name="firstName"
-                                    type="text"
-                                    onChange={this.handleChange}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                                {formErrors.firstName && <FormHelperText>
-                                    First Name shouldn't be more than 8 character long.
-                                </FormHelperText>}
-                            </FormControl>
-                            {/*Free text, validation against most common mistakes regarding a person’s name*/}
+                            <InputTextField value={firstName}
+                                            formErrors={formErrors}
+                                            name="firstName"
+                                            placeholder="John"
+                                            label="First Name *"
+                                            errorMsg="First Name shouldn't be more than 8 character long."
+                                            handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
-                            <FormControl className={classes.field}>
-                                <TextField
-                                    label="Last Name *"
-                                    value={this.state.lastName}
-                                    name="lastName"
-                                    onChange={this.handleChange}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                                {formErrors.lastName && <FormHelperText error>
-                                    Last Name shouldn't be more than 8 character long.
-                                </FormHelperText>}
-                            </FormControl>
-                            {/*Free text, validation against most common mistakes regarding a person’s name*/}
+                            <InputTextField value={lastName}
+                                            formErrors={formErrors}
+                                            name="lastName"
+                                            placeholder="Doe"
+                                            label="Last Name *"
+                                            errorMsg="Last Name shouldn't be more than 8 character long."
+                                            handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
-                            <FormControl className={classes.field} error>
-                                <TextField
-                                    label="Passport Number *"
-                                    value={this.state.passportNumber}
-                                    name="passportNumber"
-                                    onChange={this.handleChange}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                                {formErrors.passportNumber && <FormHelperText>
-                                    The passport number should contain both letters and numbers without any special
-                                    character and should not be great than 9 character
-                                </FormHelperText>}
-                                {/*Free text, validation against format*/}
-                            </FormControl>
+                            <InputTextField value={passportNumber}
+                                            formErrors={formErrors}
+                                            name="passportNumber"
+                                            placeholder="BQ0622850"
+                                            label="Passport Number *"
+                                            errorMsg="The passport number should contain both letters and numbers without any special"
+                                            handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
                             <FormLabel component="legend">Passport Issuing Country *</FormLabel>
-                            <PassportIssueCountry value={this.state.passportIssueCountry}
+                            <PassportIssueCountry value={passportIssueCountry}
                                                   name="passportIssueCountry"
                                                   handleChange={this.handleChange}/>
                         </Grid>
@@ -236,7 +232,7 @@ class Registration extends Component {
                                 <RadioGroup
                                     row
                                     name="gender"
-                                    value={this.state.gender}
+                                    value={gender}
                                     onChange={this.handleChange}>
                                     <FormControlLabel value="female" control={<Radio/>} label="Female"/>
                                     <FormControlLabel value="male" control={<Radio/>} label="Male"/>
@@ -247,47 +243,38 @@ class Registration extends Component {
 
                         <Grid item md={4}>
                             <FormLabel component="legend">Nationality *</FormLabel>
-                            <Nationality value={this.state.nationality}
+                            <Nationality value={nationality}
                                          name="nationality"
                                          handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={4}>
-                            <FormLabel component="legend">Date Of Birth *</FormLabel>
-                            <FormControl component="fieldset" className={classes.formControl} error>
-                                <TextField className={classes.field}
-                                           name="dateOfBirth"
-                                           placeholder="YYYY.MM.DD"
-                                           value={this.state.dateOfBirth}
-                                           onChange={this.handleChange}/>
-
-                                {formErrors.dateOfBirth && <FormHelperText>
-                                    The date of birth should be in YYYY-MM-DD format and should not be older than 1919
-                                    and after today
-                                </FormHelperText>}
-                            </FormControl>
+                            <InputTextField value={dateOfBirth}
+                                            formErrors={formErrors}
+                                            name="dateOfBirth"
+                                            label="Date Of Birth *"
+                                            placeholder="YYYY.MM.DD"
+                                            errorMsg="The date of birth should be in YYYY-MM-DD format and should not be older than 1919 and after today"
+                                            handleChange={this.handleChange}/>
                         </Grid>
 
 
                         <Grid item md={4}>
-                            <FormLabel component="legend">Date Of Birth *</FormLabel>
-                            <FormControl component="fieldset" className={classes.formControl} error>
-                                <TextField className={classes.field}
-                                           name="passportValidity"
-                                           placeholder="YYYY.MM.DD"
-                                           value={this.state.passportValidity}
-                                           onChange={this.handleChange}/>
-
-                                {formErrors.passportValidity && <FormHelperText>
-                                    The expiry date should be in YYYY-MM-DD format and should not be before date of
-                                    birth
-                                </FormHelperText>}
-                                {/*Validation against upper and lower limits and date of birth (cannot expire before birthday*/}
-                            </FormControl>
+                            <InputTextField value={passportValidity}
+                                            formErrors={formErrors}
+                                            name="passportValidity"
+                                            label="Date Of Birth *"
+                                            placeholder="YYYY.MM.DD"
+                                            errorMsg="The expiry date should be in YYYY-MM-DD format and should not be before date of birth"
+                                            handleChange={this.handleChange}/>
                         </Grid>
 
                         <Grid item md={12}>
-                            <Button type="submit" disabled={this.disableSubmit()} variant="contained" color="primary">
+                            <Button type="submit"
+                                    onClick={this.showRegistrationInfoModal}
+                                    disabled={this.disableSubmit()}
+                                    variant="contained"
+                                    color="primary">
                                 Registration
                             </Button>
                         </Grid>
