@@ -50,15 +50,15 @@ describe('passportNumber test', () => {
 
 describe('dateOfBirth test', () => {
     it('Date Of Birth should be in YYYY-DD-MM format', () => {
-        expect(validator.dateOfBirth('1992-09-08')).toBeFalsy();
+        expect(validator.dateOfBirth('1992.09.08')).toBeFalsy();
     });
 
     it('Date Of Birth should not be older than 1900', () => {
-        expect(validator.dateOfBirth('1899-01-01')).toBeTruthy();
+        expect(validator.dateOfBirth('1899.01.01')).toBeTruthy();
     });
 
     it('Date Of Birth should not be in future', () => {
-        expect(validator.dateOfBirth('2020-01-01')).toBeTruthy();
+        expect(validator.dateOfBirth('2020.01.01')).toBeTruthy();
     });
 });
 
