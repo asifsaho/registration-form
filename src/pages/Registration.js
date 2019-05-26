@@ -282,16 +282,21 @@ class Registration extends Component {
                 </Container>
             </form>
 
-            {this.state.showRegistrationInfo && <ShowRegistrationInfo data={[
-                {label: 'First Name', value: this.state.firstName},
-                {label: 'Last Name', value: this.state.lastName},
-                {label: 'Passport Number', value: this.state.passportNumber},
-                {label: 'Passport Issue Country', value: this.state.passportIssueCountry.label},
-                {label: 'Gender', value: this.state.gender},
-                {label: 'Nationality', value: this.state.nationality.label},
-                {label: 'Date Of Birth', value: moment(this.state.dateOfBirth).format('DD.MM.YYYY')},
-                {label: 'Passport Validity', value: moment(this.state.passportValidity).format('DD.MM.YYYY')}
-            ]}/>}
+            <Container maxWidth="md">
+                <ShowRegistrationInfo
+                    hideRegistrationInfoModal={this.hideRegistrationInfoModal}
+                    showRegistrationInfo={this.state.showRegistrationInfo}
+                    data={[
+                        {label: 'First Name', value: this.state.firstName},
+                        {label: 'Last Name', value: this.state.lastName},
+                        {label: 'Passport Number', value: this.state.passportNumber},
+                        {label: 'Passport Issue Country', value: this.state.passportIssueCountry.label},
+                        {label: 'Gender', value: this.state.gender},
+                        {label: 'Nationality', value: this.state.nationality.label},
+                        {label: 'Date Of Birth', value: moment(this.state.dateOfBirth).format('DD.MM.YYYY')},
+                        {label: 'Passport Validity', value: moment(this.state.passportValidity).format('DD.MM.YYYY')}
+                    ]}/>
+            </Container>
             </>
         )
     }
