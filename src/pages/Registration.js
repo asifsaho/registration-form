@@ -16,7 +16,7 @@ import InputTextField from '../components/InputTextField/InputTextField';
 import PassportIssueCountry from '../components/PassportIssueCountry/PassportIssueCountry';
 import Nationality from '../components/Nationality/Nationality';
 import validator from '../utils/validator';
-import ShowRegistrationInfo from '../components/ShowRegistrationInfo';
+import RegistrationInfo from '../components/RegistrationInfo/RegistrationInfo';
 
 class Registration extends Component {
     constructor(props) {
@@ -267,7 +267,7 @@ class Registration extends Component {
             </form>
 
             <Container maxWidth="md">
-                <ShowRegistrationInfo
+                <RegistrationInfo
                     hideRegistrationInfoModal={this.hideRegistrationInfoModal}
                     showRegistrationInfo={this.state.showRegistrationInfo}
                     data={[

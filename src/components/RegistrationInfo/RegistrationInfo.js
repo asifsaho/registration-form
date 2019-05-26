@@ -41,9 +41,7 @@ const DialogTitle = withStyles(styles)(props => {
     );
 });
 
-class CustomizedDialogs extends Component {
-
-
+class RegistrationInfo extends Component {
     render() {
         return (
             <div>
@@ -58,7 +56,8 @@ class CustomizedDialogs extends Component {
                     <DialogContent dividers>
                         <Grid container>
                             {this.props.data.map((item, i) => (
-                                <Grid md={6}><p><strong>{item.label}</strong>: {item.value}</p></Grid>
+                                <Grid item key={i} md={6}><p className={item.value.split(' ').join('')}>
+                                    <strong>{item.label}</strong>: <span>{item.value}</span></p></Grid>
                             ))}
                         </Grid>
                     </DialogContent>
@@ -87,4 +86,4 @@ const DialogActions = withStyles(theme => ({
     },
 }))(MuiDialogActions);
 
-export default CustomizedDialogs;
+export default RegistrationInfo;
