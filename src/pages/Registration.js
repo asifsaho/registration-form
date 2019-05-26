@@ -38,6 +38,8 @@ class Registration extends Component {
                 passportNumber: false,
                 passportIssueCountry: false,
                 gender: false,
+                dateOfBirth: false,
+                passportValidity: false,
                 nationality: false
             },
             showRegistrationInfo: false
@@ -86,6 +88,25 @@ class Registration extends Component {
 
                 break;
 
+            case "dateOfBirth":
+                const formatRegex = RegExp('^[0-9]{4}\\.[0-9]{1,2}\\.[0-9]{1,2}$', 'g');
+
+                this.setState({
+                    formErrors: Object.assign(this.state.formErrors, {
+                        [name]: (!value.length || !formatRegex.test(value) || !moment(new Date(value)).isValid() || !(moment(new Date(value)).diff('1919-01-01', 'days') > 0) || !!(moment(new Date(value)).diff(new Date(), 'days') > 0))
+                    })
+                });
+
+                // console.log({ // True means pass
+                //     'Format check': formatRegex.test(value),
+                //     'length': !!value.length,
+                //     'Is Valid': moment(new Date(value)).isValid(),
+                //     'Not Older than 1919': (moment(new Date(value)).diff('1919-01-01', 'days') > 0),
+                //     'Date Not after today': !(moment(new Date(value)).diff(new Date(), 'days') > 0)
+                // });
+
+                break;
+
             default:
                 return;
         }
@@ -119,7 +140,9 @@ class Registration extends Component {
             state.formErrors.passportNumber ||
             state.formErrors.passportIssueCountry ||
             state.formErrors.gender ||
-            state.formErrors.nationality
+            state.formErrors.nationality ||
+            state.formErrors.dateOfBirth ||
+            state.formErrors.passportValidity
         )
     };
 
@@ -220,15 +243,34 @@ class Registration extends Component {
 
                         <Grid item md={4}>
                             <FormLabel component="legend">Date Of Birth *</FormLabel>
-                            <DatePicker className={classes.field} label="Date Of Birth *" name="dateOfBirth"
-                                        handleChange={this.handleChange}/>
-                            {/*Validation against upper and lower limits*/}
+                            <FormControl component="fieldset" className={classes.formControl} error>
+                                <TextField className={classes.field}
+                                           name="dateOfBirth"
+                                           placeholder="YYYY.MM.DD"
+                                           value={this.state.dateOfBirth}
+                                           onChange={this.handleChange}/>
+
+                                {formErrors.dateOfBirth && <FormHelperText>
+                                    The date of birth should be in YYYY-MM-DD format and should not be older than 1919 and after today
+                                </FormHelperText>}
+                            </FormControl>
                         </Grid>
 
+
                         <Grid item md={4}>
-                            <FormLabel component="legend">Their passport expiration date *</FormLabel>
-                            <DatePicker name="passportValidity" handleChange={this.handleChange}/>
-                            {/*Validation against upper and lower limits and date of birth (cannot expire before birth)*/}
+                            <FormLabel component="legend">Date Of Birth *</FormLabel>
+                            <FormControl component="fieldset" className={classes.formControl} error>
+                                <TextField className={classes.field}
+                                           name="passportValidity"
+                                           placeholder="YYYY.MM.DD"
+                                           value={this.state.passportValidity}
+                                           onChange={this.handleChange}/>
+
+                                {formErrors.passportValidity && <FormHelperText>
+                                    The expiry date should be in YYYY-MM-DD format and should not be before date of birth
+                                </FormHelperText>}
+                                {/*Validation against upper and lower limits and date of birth (cannot expire before birthday*/}
+                            </FormControl>
                         </Grid>
 
                         <Grid item md={12}>
