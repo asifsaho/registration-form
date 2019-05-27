@@ -187,7 +187,7 @@ class Registration extends Component {
                                             name="firstName"
                                             placeholder="John"
                                             label="First Name *"
-                                            errorMsg="First Name shouldn't be more than 8 character long."
+                                            errorMsg="First Name shouldn't be more than 8 character long and contain any special character and number"
                                             handleChange={this.handleChange}/>
                         </Grid>
 
@@ -197,7 +197,7 @@ class Registration extends Component {
                                             name="lastName"
                                             placeholder="Doe"
                                             label="Last Name *"
-                                            errorMsg="Last Name shouldn't be more than 8 character long."
+                                            errorMsg="Last Name shouldn't be more than 8 character long and contain any special character and number"
                                             handleChange={this.handleChange}/>
                         </Grid>
 
@@ -207,7 +207,7 @@ class Registration extends Component {
                                             name="passportNumber"
                                             placeholder="BQ0622850"
                                             label="Passport Number *"
-                                            errorMsg="The passport number should contain both letters and numbers without any special"
+                                            errorMsg="The passport number should contain both letters and numbers without any special character"
                                             handleChange={this.handleChange}/>
                         </Grid>
 
